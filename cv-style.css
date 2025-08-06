@@ -1,0 +1,115 @@
+:root {
+    --primary: #228B22;   /* Forest Green */
+    --secondary: #f4f8f4; /* Light Green-Gray */
+    --text: #222;
+    --muted: #555;
+}
+
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--secondary);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+}
+
+.cv-container {
+    max-width: 850px;
+    margin: auto;
+    background: white;
+    padding: 2rem;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    border-top: 8px solid var(--primary);
+}
+
+header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0;
+    color: var(--primary);
+}
+
+header .orcid-id {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+}
+
+section {
+    margin-top: 2rem;
+}
+
+h2 {
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 0.3rem;
+    font-size: 1.4rem;
+    color: var(--primary);
+}
+
+ul, ol {
+    margin-left: 1.2rem;
+    padding-left: 0.2rem;
+}
+
+li {
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .cv-container {
+        padding: 1rem;
+    }
+
+    header h1 {
+        font-size: 1.6rem;
+    }
+}
+
+/* Print-friendly styling for PDF export */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .cv-container {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    header h1 {
+        color: black;
+    }
+
+    h2 {
+        color: black;
+        border-bottom: 1px solid black;
+    }
+
+    a {
+        color: black;
+        text-decoration: none;
+    }
+
+    a::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+    }
+
+    /* Hide elements that are screen-only */
+    .no-print {
+        display: none !important;
+    }
+}
