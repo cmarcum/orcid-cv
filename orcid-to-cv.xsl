@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
+    <!-- Need to grab this from the parser and carry forward SHOW_JOURNAL_TITLES -->
     <xsl:param name="show-journal-titles" select="'true'"/>
     <xsl:output method="html" indent="yes"/>
 
     <xsl:template match="/">
         <div class="cv-container">
 
-            <!-- Header -->
+            <!-- We're using credit-name for the title line -->
             <header>
                 <h1>
-                    <xsl:value-of select="//*[local-name()='personal-details']/*[local-name()='given-names']"/>
-                    <xsl:text> </xsl:text>
-                    <xsl:value-of select="//*[local-name()='personal-details']/*[local-name()='family-name']"/>
+                    <xsl:text> Curriculum Vitae of </xsl:text><xsl:value-of select="//*[local-name()='personal-details']/*[local-name()='credit-name']"/>  
                 </h1>
                 <p class="orcid-id">
-                    ORCID: <xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='path']"/>
+                    <xsl:text> ORCID: </xsl:text> <xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='path']"/>
                 </p>
             </header>
 
@@ -74,9 +72,14 @@
                     <xsl:for-each select="//*[local-name()='service-summary']">
                         <li>
                             <strong><xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/></strong>
-                            (<xsl:value-of select="*[local-name()='organization']/*[local-name()='address']/*[local-name()='city']"/>)
                             <br/>
-                            <xsl:value-of select="*[local-name()='role-title']"/>
+                            <xsl:value-of select="*[local-name()='role-title']"/>, <xsl:value-of select="*[local-name()='department-name']"/>
+                            <xsl:if test="*[local-name()='start-date']/*[local-name()='year']">
+                                <xsl:text> • </xsl:text>
+                                <xsl:value-of select="*[local-name()='start-date']/*[local-name()='year']"/>
+                                <xsl:text> – </xsl:text>
+                                <xsl:value-of select="*[local-name()='end-date']/*[local-name()='year']"/>
+                            </xsl:if>
                         </li>
                     </xsl:for-each>
                 </ul>
@@ -90,14 +93,15 @@
                 <ul>
                     <xsl:for-each select="//*[local-name()='distinction-summary']">
                         <li>
-                            <strong><xsl:value-of select="*[local-name()='title']"/></strong>
-                            <xsl:if test="*[local-name()='organization']/*[local-name()='name']">
+                            <strong><xsl:value-of select="*[local-name()='role-title']"/></strong>
+                                <br/>
+                                <xsl:value-of select="*[local-name()='department-name']"/>
                                 <xsl:text>, </xsl:text>
                                 <xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/>
                             </xsl:if>
-                            <xsl:if test="*[local-name()='start-date']/*[local-name()='year']">
+                            <xsl:if test="*[local-name()='start-date']/*[local-name()='year'] and *[local-name()='start-date']/*[local-name()='month']">
                                 <xsl:text> (</xsl:text>
-                                <xsl:value-of select="*[local-name()='start-date']/*[local-name()='year']"/>
+                                <xsl:value-of select="*[local-name()='start-date']/*[local-name()='month']"/><xsl:text>/</xsl:text><xsl:value-of select="*[local-name()='start-date']/*[local-name()='year']"/>
                                 <xsl:text>)</xsl:text>
                             </xsl:if>
                         </li>
@@ -115,7 +119,7 @@
                         <li>
                             <xsl:variable name="doi" select="*[local-name()='external-ids']/*[local-name()='external-id'][*[local-name()='external-id-type']='doi']/*[local-name()='external-id-value']"/>
                             <xsl:variable name="journal" select="*[local-name()='journal-title']"/>
-
+                            <!--TO_DO: hook for URL if DOI not present -->
                             <xsl:choose>
                                 <xsl:when test="$doi">
                                     <a target="_blank">
