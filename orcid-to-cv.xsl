@@ -4,7 +4,10 @@
     <!-- Need to grab this from the parser and carry forward SHOW_JOURNAL_TITLES -->
     <xsl:param name="show-journal-titles" select="'true'"/>
     <xsl:output method="html" indent="yes"/>
-
+    <!-- Key for grouping by lowercase title -->
+    <xsl:key name="by-title" match="*[local-name()='work-summary']"
+        use="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
+    
     <xsl:template match="/">
         <div class="cv-container">
 
@@ -124,11 +127,6 @@
             <section>
                 <h2>Works</h2>
                 <ol>
-                    <!-- Key for grouping by lowercase title -->
-                    <xsl:key name="by-title" match="*[local-name()='work-summary']"
-                        use="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
-                                       'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
-            
                     <!-- Iterate unique titles only -->
                     <xsl:for-each select="
                         //*[local-name()='work-summary']
