@@ -7,7 +7,6 @@
     <!-- Key for grouping by lowercase title -->
     <xsl:key name="by-title" match="*[local-name()='work-summary']"
         use="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
-    <xsl:variable name="orcidurl"><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='uri']"/></xsl:variable>
     <xsl:template match="/">
         <div class="cv-container">
 
@@ -17,7 +16,8 @@
                     <xsl:text> Curriculum Vitae of </xsl:text><xsl:value-of select="//*[local-name()='source']/*[local-name()='source-name']"/>  
                 </h1>
                 <p class="orcid-id">
-                      <a href="{$orcidurl}"> <xsl:text> ORCID: </xsl:text><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='path']"/></a>
+                      <xsl:variable name="orcidurl"><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='uri']"/></xsl:variable>
+                      <a href="{$orcidurl}"><xsl:text> ORCID: </xsl:text><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='path']"/></a>
                 </p>
             </header>
 
