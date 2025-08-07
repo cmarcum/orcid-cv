@@ -7,7 +7,7 @@
     <!-- Key for grouping by lowercase title -->
     <xsl:key name="by-title" match="*[local-name()='work-summary']"
         use="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
-    
+    <xsl:variable name="orcidurl"><xsl:value-of select=""//*[local-name()='orcid-identifier']/*[local-name()='uri']"" /></xsl:variable>
     <xsl:template match="/">
         <div class="cv-container">
 
@@ -17,7 +17,7 @@
                     <xsl:text> Curriculum Vitae of </xsl:text><xsl:value-of select="//*[local-name()='source']/*[local-name()='source-name']"/>  
                 </h1>
                 <p class="orcid-id">
-                    <xsl:text> ORCID: </xsl:text> <xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='path']"/>
+                      <a href="{$orcidurl}"> <xsl:text> ORCID: </xsl:text><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='path']"/></a>
                 </p>
             </header>
 
@@ -123,6 +123,36 @@
             </section>
             </xsl:if>
 
+             <!-- Service and Membership -->
+            <xsl:if test="//*[local-name()='service-summary']">
+            <section>
+                <h2>Service and Membership</h2>
+                <ul>
+                    <xsl:for-each select="//*[local-name()='service-summary'] | //*[local-name()='membership-summary']">
+                    <!-- TO_DO: tune to sort by date -->
+                    <!-- <xsl:sort select="number(*[local-name()='start-date']/*[local-name()='year'])" data-type="number" order="descending"/> -->
+                        <li>
+                            <strong><xsl:value-of select="*[local-name()='role-title']"/></strong>
+                                <br/>
+                            <xsl:if test="//*[local-name()='service-summary"/>
+                                <xsl:value-of select="*[local-name()='department-name']"/>
+                                <xsl:text>, </xsl:text>
+                                <xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/>
+                            </xsl:if>
+                            <xsl:if test="//*[local-name()='membership-summary"/>
+                                <xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/>
+                            </xsl:if>
+                            <xsl:if test="*[local-name()='start-date']/*[local-name()='year'] and *[local-name()='start-date']/*[local-name()='month']">
+                                <xsl:text> (</xsl:text>
+                                <xsl:value-of select="*[local-name()='start-date']/*[local-name()='month']"/><xsl:text>/</xsl:text><xsl:value-of select="*[local-name()='start-date']/*[local-name()='year']"/>
+                                <xsl:text>)</xsl:text>
+                            </xsl:if>
+                        </li>
+                    </xsl:for-each>
+                </ul>
+            </section>
+            </xsl:if>
+            
             <!-- Publications / Works etc With Deduplication (if we're lucky) -->
             <!-- A portion of the deduplication routine was AI-assisted because mine kept breaking-->
             <xsl:if test="//*[local-name()='work-summary']">
