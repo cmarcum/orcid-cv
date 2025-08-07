@@ -126,7 +126,7 @@
             </section>
             </xsl:if>
 
-             <!-- Service and Membership -->
+             <!-- Service and Membership
             <xsl:if test="//*[local-name()='service-summary']">
             <section>
                 <h2>Service and Membership</h2>
@@ -155,6 +155,7 @@
                  </ul>
             </section>
             </xsl:if>
+            -->
             
             <!-- Publications / Works etc With Deduplication (if we're lucky) -->
             <!-- A portion of the deduplication routine was AI-assisted because mine kept breaking-->
