@@ -99,7 +99,7 @@
             <!-- Distinctions -->
             <xsl:if test="//*[local-name()='distinction-summary']">
             <section>
-                <h2>Distinctions & Invited Positions</h2>
+                <h2>Distinctions and Invited Positions</h2>
                 <ul>
                     <xsl:for-each select="//*[local-name()='distinction-summary'] | //*[local-name()='invited-position-summary']">
                     <!-- TO_DO: tune to sort by date -->
@@ -107,7 +107,7 @@
                         <li>
                             <strong><xsl:value-of select="*[local-name()='role-title']"/></strong>
                                 <br/>
-                            <xsl:if test="//*[local-name()='distinction-summary']">
+                            <xsl:if test="//*[local-name()='distinction-summary'] | //*[local-name()='invited-position-summary']">
                                 <xsl:value-of select="*[local-name()='department-name']"/>
                                 <xsl:text>, </xsl:text>
                             </xsl:if>
