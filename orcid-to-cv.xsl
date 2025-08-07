@@ -122,36 +122,32 @@
             <!-- Key for grouping by lowercased title -->
             <xsl:key name="by-title" match="*[local-name()='work-summary']"
                 use="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
-                               'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')"/>
+                               'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
             
             <xsl:for-each select="
                 //*[local-name()='work-summary']
-                [generate-id() = generate-id(
-                    key('by-title',
-                        translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
-                                  'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')
-                    )[1]
-                )]
+                [generate-id() =
+                 generate-id(key('by-title',
+                   translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
+                             'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')
+                 )[1])]
             ">
                 <xsl:variable name="title-lc"
                     select="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
                                       'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
+                <xsl:variable name="title"
+                    select="*[local-name()='title']/*[local-name()='title']"/>
             
-                <!-- All works with this title (dedup group) -->
-                <xsl:variable name="dupes" select="
-                    key('by-title', $title-lc)
-                    [*[local-name()='external-ids']/*[local-name()='external-id']
-                        /*[local-name()='external-id-type']='doi']
-                " />
+                <!-- Collect all works with same title -->
+                <xsl:variable name="dupes" select="key('by-title',$title-lc)" />
             
-                <!-- Sort duplicates by publication year ascending (earliest first) -->
+                <!-- Sort duplicates by year to get earliest -->
                 <xsl:for-each select="$dupes">
                     <xsl:sort select="*[local-name()='publication-date']/*[local-name()='year']"
                               data-type="number" order="ascending" />
                     <xsl:if test="position()=1">
                         <li>
-                            <xsl:variable name="title"
-                                select="*[local-name()='title']/*[local-name()='title']"/>
+                            <!-- Determine best link: DOI > URL > plain text -->
                             <xsl:variable name="doi"
                                 select="*[local-name()='external-ids']/*[local-name()='external-id']
                                         [*[local-name()='external-id-type']='doi']
@@ -194,7 +190,7 @@
                         </li>
                     </xsl:if>
                 </xsl:for-each>
-            </xsl:for-each>            
+            </xsl:for-each>           
         </div>
     </xsl:template>
 </xsl:stylesheet>
