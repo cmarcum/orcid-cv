@@ -90,16 +90,16 @@ a:hover {
     }
 
     header h1 {
-        color: black;
+        color: var(--primary);
     }
 
     h2 {
-        color: black;
+        color: var(--primary);
         border-bottom: 1px solid black;
     }
 
     a {
-        color: black;
+        color: var(--primary);
         text-decoration: none;
     }
 
