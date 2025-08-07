@@ -16,16 +16,20 @@
                     <xsl:text> Curriculum Vitae of </xsl:text><xsl:value-of select="//*[local-name()='source']/*[local-name()='source-name']"/>  
                 </h1>
                 <p class="orcid-id">
-                   <!-- TO_DO hyperlink orcid id -->
-                   <!-- <xsl:variable name="orcidurl"><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='uri']"/></xsl:variable> 
-                      <a href="{$orcidurl}"><xsl:text> ORCID: </xsl:text><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='path']"/></a>
-                    -->
-                    <xsl:text> ORCID: </xsl:text><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='uri']"/>
+                    <xsl:variable name="orcid-uri" select="/*[local-name()='record']/*[local-name()='orcid-identifier']/*[local-name()='uri']"/>
+                    <xsl:variable name="orcid-path" select="/*[local-name()='record']/*[local-name()='orcid-identifier']/*[local-name()='path']"/>
+                    <a>
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="$orcid-uri"/>
+                        </xsl:attribute>
+                        <img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" alt="ORCID iD icon" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"/>
+                        <xsl:text>ORCID: </xsl:text>
+                        <xsl:value-of select="$orcid-path"/>
+                    </a>
                 </p>
             </header>
 
             <!-- Education -->
-            <xsl:if test="//*[local-name()='education-summary']">
             <section>
                 <h2>Education</h2>
                 <ul>
@@ -45,10 +49,8 @@
                     </xsl:for-each>
                 </ul>
             </section>
-            </xsl:if>
 
             <!-- Employment -->
-            <xsl:if test="//*[local-name()='employment-summary']">
             <section>
                 <h2>Employment</h2>
                 <ul>
@@ -68,18 +70,22 @@
                     </xsl:for-each>
                 </ul>
             </section>
-            </xsl:if>
 
             <!-- Service -->
-            <xsl:if test="//*[local-name()='service-summary']">
             <section>
-                <h2>Service</h2>
+                <h2>Service and Memberships</h2>
                 <ul>
-                    <xsl:for-each select="//*[local-name()='service-summary']">
+                    <xsl:for-each select="//*[local-name()='service-summary'] | //*[local-name()='membership-summary']">
+                    <!-- TO_DO: tune to sort by date -->
+                    <!-- <xsl:sort select="number(*[local-name()='start-date']/*[local-name()='year'])" data-type="number" order="descending"/> -->
                         <li>
                             <strong><xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/></strong>
                             <br/>
-                            <xsl:value-of select="*[local-name()='role-title']"/>, <xsl:value-of select="*[local-name()='department-name']"/>
+                           <xsl:value-of select="*[local-name()='role-title']"/>
+                                <xsl:if test="*[local-name()='department-name']">
+                                    <xsl:text>, </xsl:text>
+                                    <xsl:value-of select="*[local-name()='department-name']"/>
+                                </xsl:if>
                             <xsl:choose>
                                 <xsl:when test="*[local-name()='start-date']/*[local-name()='year'] and *[local-name()='end-date']/*[local-name()='year']">
                                     <xsl:text> • </xsl:text>
@@ -97,10 +103,8 @@
                     </xsl:for-each>
                 </ul>
             </section>
-            </xsl:if>
 
-            <!-- Distinctions -->
-            <xsl:if test="//*[local-name()='distinction-summary']">
+            <!-- Distinctions -->                           
             <section>
                 <h2>Distinctions and Invited Positions</h2>
                 <ul>
@@ -108,12 +112,13 @@
                     <!-- TO_DO: tune to sort by date -->
                     <!-- <xsl:sort select="number(*[local-name()='start-date']/*[local-name()='year'])" data-type="number" order="descending"/> -->
                         <li>
-                            <strong><xsl:value-of select="*[local-name()='role-title']"/></strong>
-                                <br/>
-                            <xsl:if test="//*[local-name()='distinction-summary'] | //*[local-name()='invited-position-summary']">
-                                <xsl:value-of select="*[local-name()='department-name']"/>
-                                <xsl:text>, </xsl:text>
-                            </xsl:if>
+                            <strong><xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/></strong>
+                            <br/>
+                               <xsl:value-of select="*[local-name()='role-title']"/>
+                                <xsl:if test="*[local-name()='department-name']">
+                                    <xsl:text>, </xsl:text>
+                                    <xsl:value-of select="*[local-name()='department-name']"/>
+                                </xsl:if>
                             <xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/>
                             <xsl:if test="*[local-name()='start-date']/*[local-name()='year'] and *[local-name()='start-date']/*[local-name()='month']">
                                 <xsl:text> (</xsl:text>
@@ -124,42 +129,9 @@
                     </xsl:for-each>
                 </ul>
             </section>
-            </xsl:if>
-
-             <!-- Service and Membership
-            <xsl:if test="//*[local-name()='service-summary']">
-            <section>
-                <h2>Service and Membership</h2>
-                <ul>
-                    <xsl:for-each select="//*[local-name()='service-summary'] | //*[local-name()='membership-summary']">
-                    <!-- TO_DO: tune to sort by date -->
-                    <!-- <xsl:sort select="number(*[local-name()='start-date']/*[local-name()='year'])" data-type="number" order="descending"/> -->
-                        <li>
-                            <strong><xsl:value-of select="*[local-name()='role-title']"/></strong>
-                                <br/>
-                            <xsl:if test="//*[local-name()='service-summary"/>
-                                <xsl:value-of select="*[local-name()='department-name']"/>
-                                <xsl:text>, </xsl:text>
-                                <xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/>
-                            </xsl:if>
-                            <xsl:if test="//*[local-name()='membership-summary"/>
-                                <xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/>
-                            </xsl:if>
-                            <xsl:if test="*[local-name()='start-date']/*[local-name()='year'] and *[local-name()='start-date']/*[local-name()='month']">
-                                <xsl:text> (</xsl:text>
-                                <xsl:value-of select="*[local-name()='start-date']/*[local-name()='month']"/><xsl:text>/</xsl:text><xsl:value-of select="*[local-name()='start-date']/*[local-name()='year']"/>
-                                <xsl:text>)</xsl:text>
-                            </xsl:if>
-                        </li>
-                    </xsl:for-each>
-                 </ul>
-            </section>
-            </xsl:if>
-            -->
             
             <!-- Publications / Works etc With Deduplication (if we're lucky) -->
             <!-- A portion of the deduplication routine was AI-assisted because mine kept breaking-->
-            <xsl:if test="//*[local-name()='work-summary']">
             <section>
                 <h2>Works</h2>
                 <ol>
@@ -233,8 +205,7 @@
                         </xsl:for-each>
                     </xsl:for-each>
                 </ol>
-            </section>
-            </xsl:if>         
+            </section>        
         </div>
     </xsl:template>
 </xsl:stylesheet>
