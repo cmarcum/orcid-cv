@@ -118,79 +118,89 @@
             </section>
             </xsl:if>
 
-            <!-- Publications / Works Etc With Deduplication -->
-            <!-- Key for grouping by lowercased title -->
-            <xsl:key name="by-title" match="*[local-name()='work-summary']"
-                use="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
-                               'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
+            <!-- Publications / Works etc With Deduplication (if we're lucky) -->
+            <!-- A portion of the deduplication routine was AI-assisted because mine kept breaking-->
+            <xsl:if test="//*[local-name()='work-summary']">
+            <section>
+                <h2>Works</h2>
+                <ol>
+                    <!-- Key for grouping by lowercase title -->
+                    <xsl:key name="by-title" match="*[local-name()='work-summary']"
+                        use="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
+                                       'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
             
-            <xsl:for-each select="
-                //*[local-name()='work-summary']
-                [generate-id() =
-                 generate-id(key('by-title',
-                   translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
-                             'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')
-                 )[1])]
-            ">
-                <xsl:variable name="title-lc"
-                    select="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
-                                      'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
-                <xsl:variable name="title"
-                    select="*[local-name()='title']/*[local-name()='title']"/>
+                    <!-- Iterate unique titles only -->
+                    <xsl:for-each select="
+                        //*[local-name()='work-summary']
+                        [generate-id() =
+                         generate-id(key('by-title',
+                           translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
+                                     'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')
+                         )[1])]
+                    ">
+                        <xsl:variable name="title-lc"
+                            select="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),
+                                              'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
+                        <xsl:variable name="title"
+                            select="*[local-name()='title']/*[local-name()='title']"/>
             
-                <!-- Collect all works with same title -->
-                <xsl:variable name="dupes" select="key('by-title',$title-lc)" />
+                        <!-- All works with the same title -->
+                        <xsl:variable name="dupes" select="key('by-title',$title-lc)" />
             
-                <!-- Sort duplicates by year to get earliest -->
-                <xsl:for-each select="$dupes">
-                    <xsl:sort select="*[local-name()='publication-date']/*[local-name()='year']"
-                              data-type="number" order="ascending" />
-                    <xsl:if test="position()=1">
-                        <li>
-                            <!-- Determine best link: DOI > URL > plain text -->
-                            <xsl:variable name="doi"
-                                select="*[local-name()='external-ids']/*[local-name()='external-id']
-                                        [*[local-name()='external-id-type']='doi']
-                                        /*[local-name()='external-id-value']"/>
-                            <xsl:variable name="url" select="*[local-name()='url']"/>
+                        <!-- Sort duplicates by publication year ascending -->
+                        <xsl:for-each select="$dupes">
+                            <xsl:sort select="*[local-name()='publication-date']/*[local-name()='year']"
+                                      data-type="number" order="ascending" />
+                            <!-- Only the first (earliest) one -->
+                            <xsl:if test="position()=1">
+                                <li>
+                                    <!-- Determine best link: DOI > URL > plain text -->
+                                    <xsl:variable name="doi"
+                                        select="*[local-name()='external-ids']/*[local-name()='external-id']
+                                                [*[local-name()='external-id-type']='doi']
+                                                /*[local-name()='external-id-value']"/>
+                                    <xsl:variable name="url" select="*[local-name()='url']"/>
             
-                            <xsl:choose>
-                                <xsl:when test="$doi">
-                                    <a target="_blank">
-                                        <xsl:attribute name="href">
-                                            <xsl:text>https://doi.org/</xsl:text>
-                                            <xsl:value-of select="$doi"/>
-                                        </xsl:attribute>
-                                        <i><xsl:value-of select="$title"/></i>
-                                    </a>
-                                </xsl:when>
-                                <xsl:when test="$url">
-                                    <a target="_blank">
-                                        <xsl:attribute name="href">
-                                            <xsl:value-of select="$url"/>
-                                        </xsl:attribute>
-                                        <i><xsl:value-of select="$title"/></i>
-                                    </a>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <i><xsl:value-of select="$title"/></i>
-                                </xsl:otherwise>
-                            </xsl:choose>
+                                    <xsl:choose>
+                                        <xsl:when test="$doi">
+                                            <a target="_blank">
+                                                <xsl:attribute name="href">
+                                                    <xsl:text>https://doi.org/</xsl:text>
+                                                    <xsl:value-of select="$doi"/>
+                                                </xsl:attribute>
+                                                <i><xsl:value-of select="$title"/></i>
+                                            </a>
+                                        </xsl:when>
+                                        <xsl:when test="$url">
+                                            <a target="_blank">
+                                                <xsl:attribute name="href">
+                                                    <xsl:value-of select="$url"/>
+                                                </xsl:attribute>
+                                                <i><xsl:value-of select="$title"/></i>
+                                            </a>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <i><xsl:value-of select="$title"/></i>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
             
-                            <xsl:if test="$show-journal-titles='true' and string-length(*[local-name()='journal-title']) &gt; 0">
-                                <xsl:text>, </xsl:text>
-                                <xsl:value-of select="*[local-name()='journal-title']"/>
+                                    <xsl:if test="$show-journal-titles='true' and string-length(*[local-name()='journal-title']) &gt; 0">
+                                        <xsl:text>, </xsl:text>
+                                        <xsl:value-of select="*[local-name()='journal-title']"/>
+                                    </xsl:if>
+            
+                                    <xsl:if test="*[local-name()='publication-date']/*[local-name()='year']">
+                                        <xsl:text> (</xsl:text>
+                                        <xsl:value-of select="*[local-name()='publication-date']/*[local-name()='year']"/>
+                                        <xsl:text>)</xsl:text>
+                                    </xsl:if>
+                                </li>
                             </xsl:if>
-            
-                            <xsl:if test="*[local-name()='publication-date']/*[local-name()='year']">
-                                <xsl:text> (</xsl:text>
-                                <xsl:value-of select="*[local-name()='publication-date']/*[local-name()='year']"/>
-                                <xsl:text>)</xsl:text>
-                            </xsl:if>
-                        </li>
-                    </xsl:if>
-                </xsl:for-each>
-            </xsl:for-each>           
+                        </xsl:for-each>
+                    </xsl:for-each>
+                </ol>
+            </section>
+            </xsl:if>         
         </div>
     </xsl:template>
 </xsl:stylesheet>
