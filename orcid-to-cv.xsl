@@ -11,7 +11,7 @@
             <!-- We're using credit-name for the title line -->
             <header>
                 <h1>
-                    <xsl:text> Curriculum Vitae of </xsl:text><xsl:value-of select="//*[local-name()='personal-details']/*[local-name()='credit-name']"/>  
+                    <xsl:text> Curriculum Vitae of </xsl:text><xsl:value-of select="//*[local-name(person)='personal-details']/*[local-name()='credit-name']"/>  
                 </h1>
                 <p class="orcid-id">
                     <xsl:text> ORCID: </xsl:text> <xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='path']"/>
