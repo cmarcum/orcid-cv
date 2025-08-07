@@ -7,7 +7,7 @@
     <!-- Key for grouping by lowercase title -->
     <xsl:key name="by-title" match="*[local-name()='work-summary']"
         use="translate(normalize-space(*[local-name()='title']/*[local-name()='title']),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
-    <xsl:variable name="orcidurl"><xsl:value-of select=""//*[local-name()='orcid-identifier']/*[local-name()='uri']"" /></xsl:variable>
+    <xsl:variable name="orcidurl"><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='uri']"/></xsl:variable>
     <xsl:template match="/">
         <div class="cv-container">
 
