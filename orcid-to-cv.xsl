@@ -16,8 +16,11 @@
                     <xsl:text> Curriculum Vitae of </xsl:text><xsl:value-of select="//*[local-name()='source']/*[local-name()='source-name']"/>  
                 </h1>
                 <p class="orcid-id">
-                      <xsl:variable name="orcidurl"><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='uri']"/></xsl:variable>
+                   <!-- TO_DO hyperlink orcid id -->
+                   <!-- <xsl:variable name="orcidurl"><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='uri']"/></xsl:variable> 
                       <a href="{$orcidurl}"><xsl:text> ORCID: </xsl:text><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='path']"/></a>
+                    -->
+                    <xsl:text> ORCID: </xsl:text><xsl:value-of select="//*[local-name()='orcid-identifier']/*[local-name()='uri']"/>
                 </p>
             </header>
 
@@ -149,7 +152,7 @@
                             </xsl:if>
                         </li>
                     </xsl:for-each>
-                </ul>
+                 </ul>
             </section>
             </xsl:if>
             
