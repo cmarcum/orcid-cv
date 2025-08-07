@@ -119,7 +119,7 @@
                                     <xsl:text>, </xsl:text>
                                     <xsl:value-of select="*[local-name()='department-name']"/>
                                 </xsl:if>
-                            <xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/>
+                            <xsl:text>, </xsl:text><xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/>
                             <xsl:if test="*[local-name()='start-date']/*[local-name()='year'] and *[local-name()='start-date']/*[local-name()='month']">
                                 <xsl:text> (</xsl:text>
                                 <xsl:value-of select="*[local-name()='start-date']/*[local-name()='month']"/><xsl:text>/</xsl:text><xsl:value-of select="*[local-name()='start-date']/*[local-name()='year']"/>
