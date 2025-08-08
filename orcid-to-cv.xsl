@@ -10,10 +10,12 @@
     <xsl:template match="/">
         <div class="cv-container">
 
-            <!-- TO_DO pull in person namespace and use credit-name for the title line -->
+            <!-- TO_DO pull in person namespace and use credit-name for the title line (currently pulls from anywhere source-name -->
             <header>
                 <h1>
-                    <xsl:text> Curriculum Vitae of </xsl:text><xsl:value-of select="//*[local-name()='source']/*[local-name()='source-name']"/>  
+                    <xsl:text> Curriculum Vitae of </xsl:text>
+                    <br/>
+                    <xsl:value-of select="//*[local-name()='source']/*[local-name()='source-name']"/>  
                 </h1>
                 <p class="orcid-id">
                     <xsl:variable name="orcid-uri" select="/*[local-name()='record']/*[local-name()='orcid-identifier']/*[local-name()='uri']"/>
@@ -112,14 +114,13 @@
                     <!-- TO_DO: tune to sort by date -->
                     <!-- <xsl:sort select="number(*[local-name()='start-date']/*[local-name()='year'])" data-type="number" order="descending"/> -->
                         <li>
-                            <strong><xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/></strong>
+                            <strong><xsl:value-of select="*[local-name()='role-title']"/></strong>
                             <br/>
-                               <xsl:value-of select="*[local-name()='role-title']"/>
                                 <xsl:if test="*[local-name()='department-name']">
-                                    <xsl:text>, </xsl:text>
                                     <xsl:value-of select="*[local-name()='department-name']"/>
+                                    <xsl:text>, </xsl:text>
                                 </xsl:if>
-                            <xsl:text>, </xsl:text><xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/>
+                            <xsl:value-of select="*[local-name()='organization']/*[local-name()='name']"/>
                             <xsl:if test="*[local-name()='start-date']/*[local-name()='year'] and *[local-name()='start-date']/*[local-name()='month']">
                                 <xsl:text> (</xsl:text>
                                 <xsl:value-of select="*[local-name()='start-date']/*[local-name()='month']"/><xsl:text>/</xsl:text><xsl:value-of select="*[local-name()='start-date']/*[local-name()='year']"/>
