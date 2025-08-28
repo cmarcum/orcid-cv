@@ -2,7 +2,7 @@
 Create a nicely formatted CV from an ORCID record
 
 # summary
-This package can be used to create a nicely formatted, printable, curriculum vitae from an [ORCID](https://www.orcid.org) id. The XML scraping and parsing is done via javacript ([fetch-orcid.js](fetch-orcid.js)) from a static orcid record: `https://pub.orcid.org/v3.0/${ORCID_ID}/record` (where `${ORCID_ID}` is 12-digit orcid id). Rendering of the XML is done via xsl (XML stylesheets): [orcid-to-cv.js](orcid-to-cv.xsl). Formatting is provided via fully customizable CSS: [cv-style](cv-style.css).
+This package can be used to create a nicely formatted, printable, curriculum vitae from an [ORCID](https://www.orcid.org) id. The XML scraping and parsing is done via javacript ([fetch-orcid.js](fetch-orcid.js)) from a static orcid record: `https://pub.orcid.org/v3.0/${ORCID_ID}/record` (where `${ORCID_ID}` is 12-digit orcid id). Rendering of the XML is done via xsl (XML stylesheets): [orcid-to-cv.xsl](orcid-to-cv.xsl). Formatting is provided via fully customizable CSS: [cv-style.css](cv-style.css).
 
 Works records (i.e., publications) are processed using a simple algorithm to reduce the likelihood of duplicate titles appearing (i.e., as may result from unlinked versions where DOIs of preprints are independent from publisher DOIs for the same manuscript). 
  - record titles elements are roughly sanitized to ensure comparability
